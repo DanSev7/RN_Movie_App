@@ -21,25 +21,54 @@ const search = () => {
     query: searchQuery
   }), false) // false to disable auto fetch, in this case we don't want to auto fetch we just want the user to search for movies but on home screen we want auto fetch
 
-    useEffect(() => { 
-      const timeoutId = setTimeout(async ()=>{
-        if(searchQuery.trim()){           
-           await loadMovies()
+  //   useEffect(() => { 
+  //     const timeoutId = setTimeout(async ()=>{
+  //       if(searchQuery.trim()){           
+  //          await loadMovies()
 
-        if (movies?.length > 0 && movies?.[0]) 
-           await updateSearchCount(searchQuery, movies[0]);
-        } else {
-          reset()
-        }
-      }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery])
+  //       if (movies?.length > 0 && movies?.[0]) 
+  //          await updateSearchCount(searchQuery, movies[0]);
+  //       } else {
+  //         reset()
+  //       }
+  //     }, 500);
+  //   return () => clearTimeout(timeoutId);
+  // }, [searchQuery])
   
   // useEffect(() => {
+  //   console.log("update search count function");
   //   if (movies && movies.length > 0 && searchQuery.trim()) {
   //     updateSearchCount(searchQuery, movies[0]);
   //   }
   // }, [movies, searchQuery])
+
+  // 1. Effect for searching/fetching
+useEffect(() => {
+  const timeoutId = setTimeout(async () => {
+    if (searchQuery.trim()) {
+      await loadMovies();
+    } else {
+      reset();
+    }
+  }, 500);
+
+  return () => clearTimeout(timeoutId);
+}, [searchQuery]);
+
+// 2. Effect for updating Appwrite (only when movies change)
+useEffect(() => {
+  const syncSearch = async () => {
+    if (searchQuery.trim() && movies && movies.length > 0) {
+      try {
+        await updateSearchCount(searchQuery, movies[0]);
+      } catch (err) {
+        console.error("Appwrite sync failed", err);
+      }
+    }
+  };
+
+  syncSearch();
+}, [movies]); // Runs whenever movies state is updated
   return (
     <View className='flex-1 bg-primary'>
       <Image source={images.bg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
