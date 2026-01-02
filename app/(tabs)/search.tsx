@@ -21,27 +21,6 @@ const search = () => {
     query: searchQuery
   }), false) // false to disable auto fetch, in this case we don't want to auto fetch we just want the user to search for movies but on home screen we want auto fetch
 
-  //   useEffect(() => { 
-  //     const timeoutId = setTimeout(async ()=>{
-  //       if(searchQuery.trim()){           
-  //          await loadMovies()
-
-  //       if (movies?.length > 0 && movies?.[0]) 
-  //          await updateSearchCount(searchQuery, movies[0]);
-  //       } else {
-  //         reset()
-  //       }
-  //     }, 500);
-  //   return () => clearTimeout(timeoutId);
-  // }, [searchQuery])
-  
-  // useEffect(() => {
-  //   console.log("update search count function");
-  //   if (movies && movies.length > 0 && searchQuery.trim()) {
-  //     updateSearchCount(searchQuery, movies[0]);
-  //   }
-  // }, [movies, searchQuery])
-
   // 1. Effect for searching/fetching
 useEffect(() => {
   const timeoutId = setTimeout(async () => {
